@@ -1,14 +1,9 @@
 {
-  "builds": [
-    {
-      "src": "main.py",
-      "use": "@vercel/python"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bash mkblob.sh 500 blob.bin",
+  "functions": {
+    "main.py": {
+      "includeFiles": "blob.bin"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "main.py"
-    }
-  ]
+  }
 }
