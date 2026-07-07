@@ -1,9 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "bash mkblob.sh 500 blob.bin",
+  "buildCommand": "bash mkblob.sh 500 blob.bin && .vercel/python/.venv/bin/python mkpyc.py",
   "functions": {
     "main.py": {
-      "includeFiles": "blob.bin"
+      "includeFiles": "{blob.bin,pycache/**}"
     }
   }
 }

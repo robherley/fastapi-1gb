@@ -1,4 +1,12 @@
 import os
+import sys
+
+# Must be set before any _vendor imports (including fastapi below): tells
+# CPython to look for bytecode in our shipped pycache tree instead of the
+# stripped-out __pycache__ dirs. See mkpyc.py.
+if os.path.isdir("/var/task/pycache"):
+    sys.pycache_prefix = "/var/task/pycache"
+
 import resource
 from time import perf_counter, process_time, time
 from fastapi import FastAPI, HTTPException
@@ -49,7 +57,14 @@ def imports():
 
     disk_read_bytes = io1.get("read_bytes", 0) - io0.get("read_bytes", 0) if io1 else None
     io_wait = wall - cpu
+    cached = getattr(sklearn, "__cached__", None)
     return {
+        "bytecode_cache": {
+            "pycache_prefix": sys.pycache_prefix,
+            "sklearn_file": sklearn.__file__,
+            "sklearn_cached": cached,
+            "sklearn_cached_exists": bool(cached) and os.path.exists(cached),
+        },
         "versions": {
             "sklearn": sklearn.__version__,
             "PIL": PIL.__version__,
